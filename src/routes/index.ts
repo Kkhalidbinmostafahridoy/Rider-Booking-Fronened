@@ -1,4 +1,5 @@
 import App from "@/App";
+import { AccountStatusPage } from "@/components/modules/authentication/AccountStatusPage";
 import About from "@/pages/About";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
     Component: Register,
     path: "/register",
   },
+  { path: "account-status", Component: AccountStatusPage },
   // {
   //   Component: Verify,
   //   path: "/verify",

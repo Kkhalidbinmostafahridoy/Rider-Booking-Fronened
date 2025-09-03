@@ -15,12 +15,14 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         data: userInfo,
       }),
+      providesTags: () => ["USER"], // Tag the User data on login
     }),
     logout: builder.mutation({
       query: () => ({
-        url: "/auth/logout",
+        url: "/auth/logout", // make sure it matches your backend
         method: "POST",
       }),
+      invalidatesTags: ["USER"], // Invalidate User tag on logout
     }),
   }),
 });

@@ -4,6 +4,7 @@ import Logo from "@/assets/icons/Logo";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./ModeToggler";
 import { useLogoutMutation } from "@/redux/features/auth/auth.api";
+import { toast } from "sonner";
 
 const navigationLinks = [
   { href: "/", label: "Home" },
@@ -13,32 +14,43 @@ const navigationLinks = [
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-
   const [logoutApi] = useLogoutMutation();
 
-  // Check localStorage on mount
+  // ✅ Check token on mount
   useEffect(() => {
-    const token = localStorage.getItem("userToken");
+    const token = localStorage.getItem("accessToken");
     setIsLoggedIn(!!token);
   }, []);
 
-  // Handle logout
+  // ✅ Update on storage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const token = localStorage.getItem("accessToken");
+      setIsLoggedIn(!!token);
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   const handleLogout = async () => {
     try {
-      await logoutApi().unwrap(); // Call backend logout
+      const result = await logoutApi({}).unwrap(); // optional backend logout
+      console.log("Logout result:", result);
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
-      localStorage.removeItem("userToken");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
       setIsLoggedIn(false);
       navigate("/login");
+      toast.success("Logged out successfully");
     }
   };
 
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
-        {/* Left side */}
         <div className="flex items-center gap-6">
           <Link to="/" className="text-primary hover:text-primary/90">
             <Logo />
@@ -54,10 +66,8 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right side */}
         <div className="flex items-center gap-2">
           <ModeToggle />
-
           {isLoggedIn ? (
             <Button
               variant="outline"
@@ -67,7 +77,7 @@ export default function Navbar() {
               Logout
             </Button>
           ) : (
-            <Button asChild className="text-sm">
+            <Button asChild className="text-sm" variant="outline">
               <Link to="/login">Login</Link>
             </Button>
           )}

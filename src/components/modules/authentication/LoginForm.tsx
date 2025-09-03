@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+// // /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
@@ -40,27 +42,47 @@ export function LoginForm({
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-    const userInfo = {
-      email: data.email,
-      password: data.password,
-    };
+  // const onSubmit = async (data: z.infer<typeof loginSchema>) => {
+  //   const userInfo = {
+  //     email: data.email,
+  //     password: data.password,
+  //   };
 
+  //   try {
+  //     const result = await login(userInfo).unwrap();
+  //     console.log(result);
+
+  //     // if (result?.data?.user?.isVerified === false) {
+  //     //   toast.error("Please verify your email before logging in.");
+  //     //   navigate("/verify", { state: { email: data.email } }); // Pass email to the verify page
+  //     //   return; // ✅ stop further execution
+  //     // }
+
+  //     toast.success("Login successful!");
+  //     navigate("/about"); // ✅ optional: redirect to dashboard or home page
+  //   } catch (error: any) {
+  //     toast.error(error?.data?.message || "Login failed");
+  //     console.log(error);
+  //   }
+  // };
+
+  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
     try {
-      const result = await login(userInfo).unwrap();
+      const result = await login(data).unwrap();
       console.log(result);
 
-      // if (result?.data?.user?.isVerified === false) {
-      //   toast.error("Please verify your email before logging in.");
-      //   navigate("/verify", { state: { email: data.email } }); // Pass email to the verify page
-      //   return; // ✅ stop further execution
-      // }
+      // ✅ Save tokens + user
+      localStorage.setItem("accessToken", result.data.accessToken);
+      localStorage.setItem("refreshToken", result.data.refreshToken);
+      localStorage.setItem("user", JSON.stringify(result.data.user));
+
+      // ✅ Notify Navbar
+      window.dispatchEvent(new Event("storage"));
 
       toast.success("Login successful!");
-      navigate("/about"); // ✅ optional: redirect to dashboard or home page
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Login failed");
-      console.log(error);
+      navigate("/"); // redirect
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Login failed");
     }
   };
 
@@ -166,3 +188,193 @@ export function LoginForm({
     </div>
   );
 }
+
+// import { useForm } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { z } from "zod";
+// import { Input } from "@/components/ui/input";
+// import { Button } from "@/components/ui/button";
+// import {
+//   Form,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormMessage,
+// } from "@/components/ui/form";
+// import { useLoginMutation } from "@/redux/features/auth/auth.api";
+// import { useNavigate } from "react-router-dom";
+// import { toast } from "sonner";
+
+// const loginSchema = z.object({
+//   email: z.email("Invalid email"),
+//   password: z.string().min(6, "Password must be at least 6 characters"),
+// });
+
+// export function LoginForm() {
+//   const [login] = useLoginMutation();
+//   const navigate = useNavigate();
+//   const form = useForm<z.infer<typeof loginSchema>>({
+//     resolver: zodResolver(loginSchema),
+//     defaultValues: { email: "", password: "" },
+//   });
+
+//   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
+//     try {
+//       const result = await login(data).unwrap();
+
+//       // ✅ Save tokens + user
+//       localStorage.setItem("accessToken", result.data.accessToken);
+//       localStorage.setItem("refreshToken", result.data.refreshToken);
+//       localStorage.setItem("user", JSON.stringify(result.data.user));
+
+//       // ✅ Notify Navbar
+//       window.dispatchEvent(new Event("storage"));
+
+//       toast.success("Login successful!");
+//       navigate("/"); // redirect
+//     } catch (err: any) {
+//       toast.error(err?.data?.message || "Login failed");
+//     }
+//   };
+
+//   return (
+//     <Form {...form}>
+//       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+//         <FormField
+//           control={form.control}
+//           name="email"
+//           render={({ field }) => (
+//             <FormItem>
+//               <FormLabel>Email</FormLabel>
+//               <Input {...field} type="email" />
+//               <FormMessage />
+//             </FormItem>
+//           )}
+//         />
+//         <FormField
+//           control={form.control}
+//           name="password"
+//           render={({ field }) => (
+//             <FormItem>
+//               <FormLabel>Password</FormLabel>
+//               <Input {...field} type="password" />
+//               <FormMessage />
+//             </FormItem>
+//           )}
+//         />
+//         <Button type="submit" className="w-full">
+//           Login
+//         </Button>
+//       </form>
+//     </Form>
+//   );
+// }
+
+// import { cn } from "@/lib/utils";
+// import { Button } from "@/components/ui/button";
+// import { useForm } from "react-hook-form";
+// import { z } from "zod";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { useLoginMutation } from "@/redux/features/auth/auth.api";
+// import { toast } from "sonner";
+// import { useNavigate, Link } from "react-router";
+// import {
+//   Form,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormControl,
+//   FormMessage,
+// } from "@/components/ui/form";
+// import Password from "@/components/ui/password";
+
+// const loginSchema = z.object({
+//   email: z.string().email("Invalid email address"),
+//   password: z.string().min(6, "Password must be at least 6 characters"),
+// });
+
+// export function LoginForm({
+//   className,
+//   ...props
+// }: React.HTMLAttributes<HTMLDivElement>) {
+//   const [login] = useLoginMutation();
+//   const navigate = useNavigate();
+
+//   const form = useForm<z.infer<typeof loginSchema>>({
+//     resolver: zodResolver(loginSchema),
+//     defaultValues: { email: "", password: "" },
+//   });
+
+//   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
+//     try {
+//       const result = await login(data).unwrap();
+
+//       localStorage.setItem("accessToken", result.data.accessToken);
+//       localStorage.setItem("refreshToken", result.data.refreshToken);
+//       localStorage.setItem("user", JSON.stringify(result.data.user));
+//       window.dispatchEvent(new Event("storage"));
+
+//       const { role, status } = result.data.user;
+
+//       if (status !== "Active") {
+//         navigate("/account-status", { state: { status } });
+//         return;
+//       }
+
+//       if (role === "Admin") navigate("/admin/dashboard");
+//       else if (role === "Driver") navigate("/driver/dashboard");
+//       else navigate("/rider/dashboard");
+
+//       toast.success("Login successful!");
+//     } catch (err: any) {
+//       toast.error(err?.data?.message || "Login failed");
+//     }
+//   };
+
+//   return (
+//     <div className={cn("flex flex-col gap-6", className)} {...props}>
+//       <Form {...form}>
+//         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+//           <FormField
+//             control={form.control}
+//             name="email"
+//             render={({ field }) => (
+//               <FormItem>
+//                 <FormLabel>Email</FormLabel>
+//                 <FormControl>
+//                   <input {...field} className="input w-full" type="email" />
+//                 </FormControl>
+//                 <FormMessage />
+//               </FormItem>
+//             )}
+//           />
+//           <FormField
+//             control={form.control}
+//             name="password"
+//             render={({ field }) => (
+//               <FormItem>
+//                 <FormLabel>Password</FormLabel>
+//                 <FormControl>
+//                   <Password {...field} />
+//                 </FormControl>
+//                 <FormMessage />
+//               </FormItem>
+//             )}
+//           />
+//           <Button type="submit" className="w-full">
+//             Login
+//           </Button>
+//         </form>
+//       </Form>
+//       <div className="text-center text-sm">
+//         Don't have an account?{" "}
+//         <Link
+//           to="/register"
+//           className="underline text-cyan-500 underline-offset-4"
+//         >
+//           Register
+//         </Link>
+//       </div>
+//     </div>
+//   );
+// }
