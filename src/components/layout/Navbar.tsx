@@ -5,28 +5,36 @@ import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./ModeToggler";
 import { useLogoutMutation } from "@/redux/features/auth/auth.api";
 import { toast } from "sonner";
+import { role } from "@/contants/role";
 
 const navigationLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "/admin", label: "DashBoard", role: role.ADMIN },
+  { href: "/user", label: "DashBoard", role: role.USER },
 ];
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
   const [logoutApi] = useLogoutMutation();
 
-  // ✅ Check token on mount
+  // ✅ Check token and user role on mount
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
+    const user = localStorage.getItem("user");
     setIsLoggedIn(!!token);
+    setUserRole(user ? JSON.parse(user)?.role : null);
   }, []);
 
   // ✅ Update on storage changes
   useEffect(() => {
     const handleStorageChange = () => {
       const token = localStorage.getItem("accessToken");
+      const user = localStorage.getItem("user");
       setIsLoggedIn(!!token);
+      setUserRole(user ? JSON.parse(user)?.role : null);
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
@@ -34,8 +42,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      const result = await logoutApi({}).unwrap(); // optional backend logout
-      console.log("Logout result:", result);
+      await logoutApi({}).unwrap();
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
@@ -43,6 +50,7 @@ export default function Navbar() {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       setIsLoggedIn(false);
+      setUserRole(null);
       navigate("/login");
       toast.success("Logged out successfully");
     }
@@ -55,15 +63,35 @@ export default function Navbar() {
           <Link to="/" className="text-primary hover:text-primary/90">
             <Logo />
           </Link>
-          {navigationLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navigationLinks.map((link) => {
+            // Show public links
+            if (link.role === "PUBLIC") {
+              return (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                >
+                  {link.label}
+                </Link>
+              );
+            }
+
+            // Show role-specific links if user is logged in
+            if (isLoggedIn && link.role === userRole) {
+              return (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                >
+                  {link.label}
+                </Link>
+              );
+            }
+
+            return null;
+          })}
         </div>
 
         <div className="flex items-center gap-2">

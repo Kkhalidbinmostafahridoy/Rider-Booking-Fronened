@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useLocation, Link } from "react-router";
 
 export function AccountStatusPage() {
