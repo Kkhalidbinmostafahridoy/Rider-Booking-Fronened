@@ -1,13 +1,10 @@
-import { Route } from "react-router";
+import { ISidebarItem } from "@/types";
 
-function generateRoutes() {
-  return (
-    <>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-    </>
+export const generateRoutes = (sidebarItems: ISidebarItem[]) => {
+  return sidebarItems.flatMap((section) =>
+    section.items.map((route) => ({
+      path: route.url,
+      Component: route.component,
+    }))
   );
-}
-
-export default generateRoutes;
+};

@@ -184,7 +184,7 @@ function Footer() {
                     className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
                     href="#"
                   >
-                    Careers
+                    Rider Careers
                   </a>
                 </li>
               </ul>
@@ -201,7 +201,7 @@ function Footer() {
                     className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
                     href="#"
                   >
-                    Web Development
+                    Rider Development
                   </a>
                 </li>
 
@@ -210,7 +210,7 @@ function Footer() {
                     className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
                     href="#"
                   >
-                    Web Design
+                    Rider Design
                   </a>
                 </li>
 
@@ -219,7 +219,7 @@ function Footer() {
                     className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
                     href="#"
                   >
-                    Marketing
+                    Rider Marketing
                   </a>
                 </li>
 
@@ -228,7 +228,7 @@ function Footer() {
                     className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
                     href="#"
                   >
-                    Google Ads
+                    Google Rider
                   </a>
                 </li>
               </ul>
