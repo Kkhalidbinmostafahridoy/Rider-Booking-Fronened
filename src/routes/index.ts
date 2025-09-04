@@ -79,12 +79,17 @@ import { adminSidebarItems } from "./adminSIdebarItems";
 import { riderSidebarItems } from "./RiderSiderbar";
 import { driverSidebarItems } from "./DriverSidebar";
 import { userSidebarItems } from "./userSidebarItems";
+import HomePage from "@/pages/HomePage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: App,
     children: [
+      {
+        path: "",
+        Component: HomePage,
+      },
       {
         path: "about",
         Component: withAuth(About),
