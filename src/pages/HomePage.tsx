@@ -21,7 +21,7 @@ import PremiumImg from "@/assets/images/PremiumImg.png";
 import userDashboard from "@/assets/images/userdashboard.png";
 import RiderDashboard from "@/assets/images/rider.png";
 import driverDashboard from "@/assets/images/driver.png";
-import banner from "@/assets/images/banner.jpg";
+import banner from "@/assets/images/banner added.png";
 
 function HomePage() {
   // Services
@@ -175,23 +175,33 @@ function HomePage() {
   return (
     <div className="font-sans bg-gradient-to-b from-gray-100 to-gray-50 text-gray-900">
       {/* Hero Section */}
-      <section
-        className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white py-28 text-center"
-        style={{ backgroundImage: `url(${banner})` }}
-      >
-        <h1 className="text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">
-          Welcome to AFM RiDeR sYsTeM LTd..
-        </h1>
-        <p className="text-xl md:text-2xl max-w-3xl mx-auto mb-8 drop-shadow-md">
-          Manage riders, drivers, vehicles, trips, and services efficiently with
-          dashboards, analytics, and real-time tracking.
-        </p>
-        <Link
-          to="/register"
-          className="inline-block bg-white text-indigo-600 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 hover:scale-105"
-        >
-          Get Started
-        </Link>
+      <section className="relative h-[600px] md:h-[700px] w-full text-white flex flex-col justify-center items-center text-center overflow-hidden">
+        {/* Absolute Banner Image */}
+        <img
+          src={banner}
+          alt="Banner"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+
+        {/* Overlay for gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 opacity-70"></div>
+
+        {/* Content */}
+        <div className="relative z-10 px-6">
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">
+            Welcome to AFM RiDeR sYsTeM LTd...
+          </h1>
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto mb-8 drop-shadow-md">
+            Manage riders, drivers, vehicles, trips, and services efficiently
+            with dashboards, analytics, and real-time tracking.
+          </p>
+          <Link
+            to="/register"
+            className="inline-block bg-white text-indigo-600 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 hover:scale-105"
+          >
+            Get Started
+          </Link>
+        </div>
       </section>
 
       {/* Features + Live Map */}
