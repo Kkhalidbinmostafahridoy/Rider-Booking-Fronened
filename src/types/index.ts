@@ -2,7 +2,7 @@
 // authSlice.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-export type UserRole = "ADMIN" | "DRIVER" | "RIDER";
+export type UserRole = "ADMIN" | "DRIVER" | "RIDER" | "USER";
 
 export interface User {
   name: string;
@@ -53,4 +53,4 @@ export interface ISidebarItem {
   Component?: React.ComponentType<any>;
 }
 
-export type TRole = "ADMIN" | "USER" | "RIDER";
+export type TRole = "ADMIN" | "USER" | "RIDER" | "DRIVER";
