@@ -1,8 +1,7 @@
 import type { ISidebarItem } from "@/types";
 import { SquareTerminal } from "lucide-react";
-import RiderDashboard from "@/pages/Rider/RiderDashboard";
+import { RideRequest } from "@/pages/Rider/RiderRequest";
 import RiderHistory from "@/pages/Rider/RiderHistory";
-import Profile from "@/pages/Rider/Profile";
 
 export const riderSidebarItems: ISidebarItem[] = [
   {
@@ -12,19 +11,14 @@ export const riderSidebarItems: ISidebarItem[] = [
     isActive: true,
     items: [
       {
-        title: "Dashboard",
-        url: "dashboard",
-        Component: RiderDashboard,
+        title: "Rider Request",
+        url: "rider-request",
+        Component: RideRequest,
       },
       {
         title: "Ride History",
         url: "ride-history",
         Component: RiderHistory,
-      },
-      {
-        title: "Profile",
-        url: "profile",
-        Component: Profile,
       },
     ],
   },
