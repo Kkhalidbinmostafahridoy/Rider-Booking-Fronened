@@ -53,4 +53,14 @@ export interface ISidebarItem {
   Component?: React.ComponentType<any>;
 }
 
+export interface Ride {
+  _id: string;
+  pickupLocation: { address: string };
+  destinationLocation: { address: string };
+  fare: number;
+  status: "Pending" | "Accepted" | "Cancelled" | "Completed";
+  driverName?: string;
+  createdAt: string;
+}
+
 export type TRole = "ADMIN" | "USER" | "RIDER" | "DRIVER";
