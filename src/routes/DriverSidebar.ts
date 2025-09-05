@@ -18,6 +18,11 @@ export const driverSidebarItems: ISidebarItem[] = [
         Component: DriverDashboard,
       },
       {
+        title: "Profile",
+        url: "profile",
+        Component: Profile,
+      },
+      {
         title: "Active Rides",
         url: "active-rides",
         Component: ActiveRiders,
@@ -26,11 +31,6 @@ export const driverSidebarItems: ISidebarItem[] = [
         title: "Earnings",
         url: "earnings",
         Component: Earnings,
-      },
-      {
-        title: "Profile",
-        url: "profile",
-        Component: Profile,
       },
     ],
   },

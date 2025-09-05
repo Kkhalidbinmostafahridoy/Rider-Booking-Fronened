@@ -39,7 +39,8 @@
     "select": "^1.1.2",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.12",
+    "tailwind-variants": "^3.1.0",
+    "tailwindcss": "^4.1.13",
     "zod": "^4.1.5"
   },
   "devDependencies": {
