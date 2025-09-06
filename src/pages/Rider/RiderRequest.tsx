@@ -15,10 +15,11 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import {} from "@/redux/features/auth/auth.api";
 import {
   useRiderRequestCancelMutation,
   useRiderRequestMutation,
-} from "@/redux/features/auth/auth.api";
+} from "./RiderApi";
 
 // Zod schema for ride request
 const rideRequestSchema = z.object({
@@ -32,6 +33,8 @@ const rideRequestSchema = z.object({
       .string()
       .min(3, "Destination address must be at least 3 characters"),
   }),
+  paymentMethod: z.enum(["cash", "card"]).default("cash"),
+  fare: z.number().min(0).optional(),
 });
 
 type RideRequestForm = z.infer<typeof rideRequestSchema> & {
@@ -50,6 +53,7 @@ export function RideRequest() {
       pickupLocation: { coordinates: [90.4125, 23.8103], address: "" },
       destinationLocation: { coordinates: [90.4244, 23.7806], address: "" },
     },
+    paymentMethod: "cash",
   });
 
   // Load persisted ride from localStorage
@@ -67,15 +71,51 @@ export function RideRequest() {
     }
   }, []);
 
+  // Simple fare estimation
+  const estimateFare = (pickup: [number, number], dest: [number, number]) => {
+    const [lng1, lat1] = pickup;
+    const [lng2, lat2] = dest;
+    const distance =
+      Math.sqrt(Math.pow(lng2 - lng1, 2) + Math.pow(lat2 - lat1, 2)) * 111; // rough km
+    return Math.max(50, Math.round(distance * 15)); // base fare 50, 15 per km
+  };
+
   // Submit ride request
+  // const onSubmit = async (data: RideRequestForm) => {
+  //   try {
+  //     const result = await createRide(data).unwrap();
+
+  //     const rideData = {
+  //       _id: result.data._id,
+  //       pickupLocation: result.data.pickupLocation,
+  //       destinationLocation: result.data.destinationLocation,
+  //       status: result.data.status || "requested",
+  //     };
+
+  //     setCreatedRide(rideData);
+  //     localStorage.setItem("createdRide", JSON.stringify(rideData));
+
+  //     toast.success("✅ Ride requested successfully!");
+  //     form.reset();
+  //   } catch (error: any) {
+  //     toast.error(error?.data?.message || "❌ Failed to request ride");
+  //   }
+  // };
+
   const onSubmit = async (data: RideRequestForm) => {
     try {
-      const result = await createRide(data).unwrap();
+      const fare = estimateFare(
+        data.pickupLocation.coordinates,
+        data.destinationLocation.coordinates
+      );
+      const result = await createRide({ ...data, fare }).unwrap();
 
       const rideData = {
         _id: result.data._id,
         pickupLocation: result.data.pickupLocation,
         destinationLocation: result.data.destinationLocation,
+        paymentMethod: result.data.paymentMethod,
+        fare: result.data.fare,
         status: result.data.status || "requested",
       };
 
@@ -244,6 +284,30 @@ export function RideRequest() {
                       </FormItem>
                     )}
                   />
+
+                  {/* Payment Method */}
+                  <div className="border rounded-lg p-4 shadow-sm">
+                    <h3 className="font-semibold mb-3">💳 Payment Method</h3>
+                    <FormField
+                      control={form.control}
+                      name="paymentMethod"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Select Payment Method</FormLabel>
+                          <FormControl>
+                            <select
+                              {...field}
+                              className="border rounded px-2 py-1 w-full"
+                            >
+                              <option value="cash">Cash</option>
+                              <option value="card">Card</option>
+                            </select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -256,7 +320,7 @@ export function RideRequest() {
       </Card>
       {/* Show created ride */}
       {createdRide && (
-        <Card className="max-h-1/3 mx-4">
+        <Card className="max-h-2/5 mx-4">
           <CardHeader>
             <CardTitle>
               {createdRide.status === "cancelled"
@@ -277,6 +341,12 @@ export function RideRequest() {
               <strong>Coordinates:</strong>{" "}
               {createdRide.pickupLocation?.coordinates?.join(", ")} →{" "}
               {createdRide.destinationLocation?.coordinates?.join(", ")}
+            </p>
+            <p>
+              <strong>Payment:</strong> {createdRide.paymentMethod}
+            </p>
+            <p>
+              <strong>Fare Estimate:</strong> {createdRide.fare} BDT
             </p>
             {createdRide.status !== "cancelled" && (
               <div className="text-right">

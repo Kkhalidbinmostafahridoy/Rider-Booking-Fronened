@@ -84,7 +84,7 @@ export function RegistrationForm({
           address,
         }).unwrap();
       }
-
+      console.log(result);
       // ✅ Save tokens + user
       localStorage.setItem("accessToken", result.data.accessToken);
       localStorage.setItem("refreshToken", result.data.refreshToken);

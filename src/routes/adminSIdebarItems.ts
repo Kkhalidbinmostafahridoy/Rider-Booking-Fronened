@@ -1,11 +1,11 @@
 // import Analytics from "@/pages/Admin/Analytics";
 import Driver from "@/pages/Admin/Driver";
-import RidersCancel from "@/pages/Rider/RidersCancel";
+import Riders from "@/pages/Admin/Riders";
 import type { ISidebarItem } from "@/types";
 import { SquareTerminal } from "lucide-react";
 import { lazy } from "react";
 
-const Analytics = lazy(() => import("@/pages/Admin/Analytics"));
+const Users = lazy(() => import("@/pages/Admin/Users"));
 
 export const adminSidebarItems: ISidebarItem[] = [
   {
@@ -15,14 +15,14 @@ export const adminSidebarItems: ISidebarItem[] = [
     isActive: true,
     items: [
       {
-        title: "Analytics",
-        url: "analytics", // relative to /admin
-        Component: Analytics,
+        title: "Users",
+        url: "users", // relative to /admin
+        Component: Users,
       },
       {
         title: "Riders",
         url: "riders", // relative to /admin
-        Component: RidersCancel,
+        Component: Riders,
       },
       {
         title: "Drivers",

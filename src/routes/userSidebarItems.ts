@@ -1,5 +1,5 @@
 import Driver from "@/pages/Admin/Driver";
-import RidersCancel from "@/pages/Rider/RidersCancel";
+import RidersCancel from "@/pages/Admin/Riders";
 import type { ISidebarItem } from "@/types";
 import { SquareTerminal } from "lucide-react";
 

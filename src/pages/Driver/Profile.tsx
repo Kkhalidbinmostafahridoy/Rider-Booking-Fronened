@@ -16,10 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import {
-  useDriverCreateMutation,
-  useDriverStatusMutation,
-} from "@/redux/features/auth/auth.api";
+import {} from "@/redux/features/auth/auth.api";
+import { useDriverCreateMutation, useDriverStatusMutation } from "./DriverApi";
 
 // ✅ Driver Profile Schema
 const driverProfileSchema = z.object({
