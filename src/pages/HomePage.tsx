@@ -371,6 +371,96 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Contact Section */}
+      <section className="py-28 bg-gradient-to-b from-purple-50 to-white">
+        <div className="container mx-auto px-6 grid lg:grid-cols-3 gap-16 items-start">
+          {/* Left: Contact Info */}
+          <div className="lg:col-span-1">
+            <h2 className="text-4xl font-bold mb-6 text-purple-700">
+              Contact Us
+            </h2>
+            <p className="text-gray-700 mb-8">
+              Have questions, feedback, or want to partner with us? Reach
+              out—we’d love to hear from you!
+            </p>
+
+            <div className="space-y-4">
+              <p className="flex items-center gap-3">
+                <FaMapMarkedAlt className="text-purple-600 text-xl" />
+                <span>Dhaka, Bangladesh</span>
+              </p>
+              <p className="flex items-center gap-3">
+                <FaUsers className="text-purple-600 text-xl" />
+                <span>support@afmrider.com</span>
+              </p>
+              <p className="flex items-center gap-3">
+                <FaRoute className="text-purple-600 text-xl" />
+                <span>+880 1234-567890</span>
+              </p>
+            </div>
+
+            {/* Embedded Map */}
+            <div className="mt-8 rounded-2xl overflow-hidden shadow-lg border">
+              <iframe
+                title="AFM Rider Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.902730232329!2d90.39121331543135!3d23.750885394598768!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b3e6b7f1db%3A0xfbbcd16b2e7a7d2c!2sDhaka!5e0!3m2!1sen!2sbd!4v1693912441895!5m2!1sen!2sbd"
+                width="100%"
+                height="250"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
+
+          {/* Right: Contact Form */}
+          <div className="lg:col-span-2 bg-white shadow-lg rounded-3xl p-8 border-t-4 border-purple-500">
+            <h3 className="text-2xl font-bold mb-6 text-purple-700">
+              Send Us a Message
+            </h3>
+            <form className="space-y-6">
+              <div>
+                <label className="block text-left font-medium text-gray-700">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  className="w-full mt-2 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
+                  placeholder="Your name"
+                />
+              </div>
+              <div>
+                <label className="block text-left font-medium text-gray-700">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="w-full mt-2 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
+                  placeholder="you@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-left font-medium text-gray-700">
+                  Message
+                </label>
+                <textarea
+                  rows={4}
+                  className="w-full mt-2 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
+                  placeholder="Write your message..."
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition"
+              >
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

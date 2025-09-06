@@ -1,4 +1,4 @@
-function Analytics() {
+function Users() {
   return (
     <div>
       <h1>Analytics Page</h1>
@@ -6,4 +6,4 @@ function Analytics() {
   );
 }
 
-export default Analytics;
+export default Users;

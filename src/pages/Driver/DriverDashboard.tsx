@@ -10,7 +10,7 @@ import {
   useGetRiderHistoryQuery,
   useRiderRequestCancelMutation,
   useRiderRequestMutation,
-} from "@/redux/features/auth/auth.api";
+} from "../Rider/RiderApi";
 
 // -------------------
 // Rider Profile Schema
