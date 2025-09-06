@@ -108,7 +108,7 @@ export function RideRequest() {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-8 space-y-6">
+    <div className="max-w-full mx-auto mt-8 space-y-6 flex flex-col-1">
       {/* Ride request form */}
       <Card className="shadow-lg rounded-2xl">
         <CardHeader>
@@ -254,10 +254,9 @@ export function RideRequest() {
           </Form>
         </CardContent>
       </Card>
-
       {/* Show created ride */}
       {createdRide && (
-        <Card>
+        <Card className="max-h-1/3 mx-4">
           <CardHeader>
             <CardTitle>
               {createdRide.status === "cancelled"

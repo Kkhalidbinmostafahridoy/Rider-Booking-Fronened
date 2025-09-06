@@ -52,18 +52,30 @@ export const authApi = baseApi.injectEndpoints({
       { page?: number; limit?: number; search?: string }
     >({
       query: ({ page = 1, limit = 10, search = "" }) => ({
-        url: `/rider/history`,
+        url: "/rider/history", // matches backend GET endpoint
         method: "GET",
-        params: { page, limit, search },
+        params: { page, limit, search }, // query params
       }),
       providesTags: (result) => {
-        // Handle cases where result is undefined or not an array
         const rides = Array.isArray(result) ? result : [];
         return [
           ...rides.map(({ _id }) => ({ type: "Ride" as const, id: _id })),
           { type: "Ride", id: "LIST" },
         ];
       },
+    }),
+    driverStatus: builder.mutation({
+      query: ({ _id }) => ({
+        url: `/driver/ride/${_id}/action`, // make sure it matches your backend
+        method: "POST",
+      }),
+    }),
+    driverCreate: builder.mutation({
+      query: (driverInfo) => ({
+        url: "/driver/drivers", // make sure it matches your backend
+        method: "POST",
+        data: driverInfo,
+      }),
     }),
   }),
 });
@@ -76,4 +88,6 @@ export const {
   useRiderRequestMutation,
   useRiderRequestCancelMutation,
   useGetRiderHistoryQuery,
+  useDriverCreateMutation,
+  useDriverStatusMutation,
 } = authApi;
