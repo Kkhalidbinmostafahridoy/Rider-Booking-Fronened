@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
-
 import {
   useGetRiderHistoryQuery,
   useRiderRequestCancelMutation,
@@ -14,28 +11,33 @@ const RiderHistory: React.FC = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
-  const {
-    data: rides,
-    isLoading,
-    isError,
-    refetch,
-  } = useGetRiderHistoryQuery({ page, limit: 10, search });
+  const { data, isLoading, isError, refetch } = useGetRiderHistoryQuery({
+    page,
+    limit: 10,
+    search,
+  });
+
+  const rides: Ride[] = Array.isArray(data) ? data : [];
+  const total = data?.length || 0;
+  const limit = 10;
+  const totalPages = Math.ceil(total / limit);
+
   const [cancelRide, { isLoading: isCancelling }] =
     useRiderRequestCancelMutation();
 
   const handleCancel = async (_id: string) => {
     try {
-      await cancelRide(_id).unwrap();
+      await cancelRide({ _id }).unwrap();
       toast.success("Ride cancelled successfully!");
-      refetch(); // refresh ride history
+      refetch();
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to cancel ride.");
     }
   };
 
-  if (isError) {
-    toast.error("Failed to fetch ride history.");
-  }
+  useEffect(() => {
+    if (isError) toast.error("Failed to fetch ride history.");
+  }, [isError]);
 
   return (
     <div className="p-4 max-w-5xl mx-auto">
@@ -51,7 +53,7 @@ const RiderHistory: React.FC = () => {
 
       {isLoading ? (
         <div className="text-center py-20">Loading...</div>
-      ) : rides && rides.length > 0 ? (
+      ) : rides.length > 0 ? (
         <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
@@ -72,7 +74,7 @@ const RiderHistory: React.FC = () => {
                   {ride.destinationLocation?.address || "N/A"}
                 </td>
                 <td className="p-3">{ride.driverName || "N/A"}</td>
-                <td className="p-3">${ride.fare.toFixed(2)}</td>
+                <td className="p-3">${ride.fare?.toFixed(2) || "0.00"}</td>
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 rounded text-white text-sm ${
@@ -87,7 +89,9 @@ const RiderHistory: React.FC = () => {
                   </span>
                 </td>
                 <td className="p-3">
-                  {format(new Date(ride.createdAt), "dd MMM yyyy, hh:mm a")}
+                  {ride.createdAt
+                    ? format(new Date(ride.createdAt), "dd MMM yyyy, hh:mm a")
+                    : "N/A"}
                 </td>
                 <td className="p-3">
                   {ride.status === "Pending" ? (
@@ -110,22 +114,21 @@ const RiderHistory: React.FC = () => {
         <div className="text-center py-20 text-gray-500">No rides found.</div>
       )}
 
-      {/* Pagination */}
       <div className="flex justify-between mt-4">
         <button
-          className="px-4 py-2 bg-muted text-red-400 rounded disabled:opacity-50"
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
           onClick={() => setPage((p) => Math.max(p - 1, 1))}
           disabled={page === 1}
         >
           Previous
         </button>
         <div className="mx-2 mt-1.5">
-          <p>Page {page}</p>
+          Page {page} of {totalPages || 1}
         </div>
         <button
-          className="px-4 py-2 bg-muted text-blue-400 rounded disabled:opacity-50"
-          onClick={() => setPage((p) => p + 1)}
-          disabled={rides && rides.length < 10}
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
+          onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+          disabled={page >= totalPages}
         >
           Next
         </button>
