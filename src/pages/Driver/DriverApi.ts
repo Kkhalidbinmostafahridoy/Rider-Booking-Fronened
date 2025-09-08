@@ -2,7 +2,7 @@ import { baseApi } from "@/redux/baseApi";
 
 export const driverApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    driverStatus: builder.mutation({
+    driverAction: builder.mutation({
       query: ({ _id, action }) => ({
         url: `/driver/ride/${_id}/action`,
         method: "POST",
@@ -16,7 +16,18 @@ export const driverApi = baseApi.injectEndpoints({
         body: driverInfo, // ✅ changed from `data` to `body`
       }),
     }),
+    driverStatus: builder.mutation({
+      query: (status) => ({
+        url: "driver/availability",
+        method: "PATCH",
+        body: { status }, // send the new status to backend
+      }),
+    }),
   }),
 });
 
-export const { useDriverCreateMutation, useDriverStatusMutation } = driverApi;
+export const {
+  useDriverCreateMutation,
+  useDriverStatusMutation,
+  useDriverActionMutation,
+} = driverApi;
