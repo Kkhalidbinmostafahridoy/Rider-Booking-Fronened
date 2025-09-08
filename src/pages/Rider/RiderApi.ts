@@ -1,5 +1,4 @@
 import { baseApi } from "@/redux/baseApi";
-import type { Ride } from "@/types";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -18,31 +17,18 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: [{ type: "Ride", id: "LIST" }],
     }),
 
-    getRiderHistory: builder.query<
-      Ride[],
-      { page?: number; limit?: number; search?: string }
-    >({
-      query: ({ page = 1, limit = 10, search = "" }) => ({
+    getRiderHistory: builder.query({
+      query: () => ({
         url: "/rider/history", // matches backend GET endpoint
         method: "GET",
-        params: { page, limit, search }, // query params
+        params: {}, // query params
       }),
-      providesTags: (result) => {
-        const rides = Array.isArray(result) ? result : [];
-        return [
-          ...rides.map(({ _id }) => ({ type: "Ride" as const, id: _id })),
-          { type: "Ride", id: "LIST" },
-        ];
-      },
+      transformResponse: (arg) => arg.data, //ol
     }),
   }),
 });
 
 export const {
-  useRegisterMutation,
-  useLoginMutation,
-  useRiderRegisterMutation,
-  useLogoutMutation,
   useRiderRequestMutation,
   useRiderRequestCancelMutation,
   useGetRiderHistoryQuery,

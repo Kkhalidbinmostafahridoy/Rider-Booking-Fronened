@@ -38,7 +38,7 @@ const driverProfileSchema = z.object({
 
 type DriverProfileFormValues = z.infer<typeof driverProfileSchema>;
 
-export function DriverProfile({
+export function Profile({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {

@@ -1,100 +1,133 @@
-import React, { useState } from "react";
-import { format } from "date-fns";
-import type { Ride } from "@/types";
-import { mockRides } from "@/types/mockRides";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useGetRiderHistoryQuery } from "./RiderApi";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { FaCheckCircle, FaClock, FaTimesCircle } from "react-icons/fa";
 
-const RiderHistory: React.FC = () => {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const limit = 5;
+function RiderHistory() {
+  const { data } = useGetRiderHistoryQuery(undefined);
+  console.log(data);
 
-  // Filtered rides by search
-  const filteredRides = mockRides.filter(
-    (Ride) =>
-      Ride.pickupLocation.address
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-      Ride.destinationLocation.address
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-      Ride.driverName?.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const totalPages = Math.ceil(filteredRides.length / limit);
-  const paginatedRides = filteredRides.slice((page - 1) * limit, page * limit);
+  const allRiders = [
+    ...(data?.details?.requested || []),
+    ...(data?.details?.cancelled || []),
+    ...(data?.details?.others || []),
+  ];
 
   return (
-    <div className="p-4 max-w-5xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">My Ride History</h2>
-
-      <input
-        type="text"
-        placeholder="Search by driver or location..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="border rounded p-2 w-full mb-4"
-      />
-
-      <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
-        <thead className="bg-muted">
-          <tr>
-            <th className="p-3 text-left">Pickup</th>
-            <th className="p-3 text-left">Destination</th>
-            <th className="p-3 text-left">Driver</th>
-            <th className="p-3 text-left">Fare</th>
-            <th className="p-3 text-left">Status</th>
-            <th className="p-3 text-left">Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedRides.map((ride: Ride) => (
-            <tr key={ride._id} className="border-b hover:bg-gray-50">
-              <td className="p-3">{ride.pickupLocation.address}</td>
-              <td className="p-3">{ride.destinationLocation.address}</td>
-              <td className="p-3">{ride.driverName}</td>
-              <td className="p-3">{ride.fare} BDT</td>
-              <td className="p-3">
-                <span
-                  className={`px-2 py-1 rounded text-white text-sm ${
-                    ride.status === "Completed"
-                      ? "bg-green-500"
-                      : ride.status === "Cancelled"
-                      ? "bg-red-500"
-                      : "bg-yellow-500"
-                  }`}
+    <div className="w-full mx-auto px-5">
+      <div className="border border-muted rounded">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[200px]">Pickup</TableHead>
+              <TableHead>Destination</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Requested At</TableHead>
+              <TableHead>Cancelled At</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {allRiders.length > 0 ? (
+              allRiders.map((ride: any) => (
+                <TableRow
+                  key={ride._id}
+                  className="hover:bg-gray-50 transition-all"
                 >
-                  {ride.status}
-                </span>
-              </td>
-              <td className="p-3">
-                {format(new Date(ride.createdAt), "dd MMM yyyy, hh:mm a")}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  <TableCell>{ride.pickupLocation?.address}</TableCell>
+                  <TableCell>{ride.destinationLocation?.address}</TableCell>
+                  <TableCell
+                    className={
+                      ride.status === "cancelled"
+                        ? "text-red-500 font-semibold flex items-center gap-1"
+                        : ride.status === "requested"
+                        ? "text-yellow-500 font-semibold flex items-center gap-1"
+                        : "text-green-600 font-semibold flex items-center gap-1"
+                    }
+                  >
+                    {ride.status === "cancelled" && <FaTimesCircle />}
+                    {ride.status === "requested" && <FaClock />}
+                    {ride.status === "completed" && <FaCheckCircle />}
+                    {ride.status}
+                  </TableCell>
+                  <TableCell>
+                    {ride.statusTimestamps?.requestedAt
+                      ? new Date(
+                          ride.statusTimestamps.requestedAt
+                        ).toLocaleString()
+                      : "-"}
+                  </TableCell>
+                  <TableCell>
+                    {ride.statusTimestamps?.cancelledAt
+                      ? new Date(
+                          ride.statusTimestamps.cancelledAt
+                        ).toLocaleString()
+                      : "-"}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={5}
+                  className="text-center text-muted-foreground"
+                >
+                  No rides found
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        {/* Summary Cards */}
+        <div>
+          <h1 className="mt-4 mb-4 text-3xl text-amber-400 text-center">
+            Summary
+          </h1>
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card className="shadow-lg rounded-2xl border-l-4 border-red-500 hover:scale-105 transition-transform">
+              <CardHeader>
+                <CardTitle>Total Riders</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center text-2xl font-bold text-red-500">
+                {data?.summary?.totalRides || 0}
+              </CardContent>
+            </Card>
 
-      <div className="flex justify-between mt-4">
-        <button
-          className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          disabled={page === 1}
-        >
-          Previous
-        </button>
-        <div className="mx-2 mt-1.5">
-          Page {page} of {totalPages || 1}
+            <Card className="shadow-lg rounded-2xl border-l-4 border-green-500 hover:scale-105 transition-transform">
+              <CardHeader>
+                <CardTitle>Requested Rides</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center text-2xl font-bold text-green-500">
+                {data?.summary?.totalRequested || 0}
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-lg rounded-2xl border-l-4 border-yellow-500 hover:scale-105 transition-transform">
+              <CardHeader>
+                <CardTitle>Cancelled Rides</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center text-2xl font-bold text-yellow-500">
+                {data?.summary?.totalCancelled || 0}
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
-        <button
-          className="px-4 py-2 bg-gray-200 text-gray-700 rounded disabled:opacity-50"
-          onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-          disabled={page >= totalPages}
-        >
-          Next
-        </button>
       </div>
     </div>
   );
-};
+}
 
 export default RiderHistory;
