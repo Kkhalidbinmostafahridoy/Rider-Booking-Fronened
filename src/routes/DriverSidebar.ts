@@ -1,9 +1,7 @@
 import ActiveRiders from "@/pages/Driver/ActiveRides";
-import { DriverDashboard } from "@/pages/Driver/DriverDashboard";
+import { DriverProfile } from "@/pages/Driver/DriverProfile";
 import Earnings from "@/pages/Driver/Earnings";
-import { IncomingRider } from "@/pages/Driver/IncomingRider";
-import { Profile } from "@/pages/Driver/Profile";
-
+import IncomingRider from "@/pages/Driver/IncomingRider";
 import type { ISidebarItem } from "@/types";
 import { SquareTerminal } from "lucide-react";
 
@@ -15,14 +13,9 @@ export const driverSidebarItems: ISidebarItem[] = [
     isActive: true,
     items: [
       {
-        title: "Dashboard",
-        url: "dashboard",
-        Component: DriverDashboard,
-      },
-      {
         title: "Profile",
         url: "profile",
-        Component: Profile,
+        Component: DriverProfile,
       },
       {
         title: "Incoming Rider",
