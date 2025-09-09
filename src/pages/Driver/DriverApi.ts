@@ -3,24 +3,30 @@ import { baseApi } from "@/redux/baseApi";
 export const driverApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     driverAction: builder.mutation({
-      query: ({ _id, action }) => ({
+      query: ({
+        _id,
+        action,
+      }: {
+        _id: string;
+        action: "accept" | "reject";
+      }) => ({
         url: `/driver/ride/${_id}/action`,
         method: "POST",
-        body: { action }, // send "accepted" or "rejected"
+        data: { action }, // ✅ this is crucial
       }),
     }),
     driverCreate: builder.mutation({
       query: (driverInfo) => ({
         url: "/driver/drivers", // ✅ check backend path
         method: "POST",
-        body: driverInfo, // ✅ changed from `data` to `body`
+        data: driverInfo, // ✅ changed from `data` to `body`
       }),
     }),
     driverStatus: builder.mutation({
       query: (status) => ({
         url: "driver/availability",
         method: "PATCH",
-        body: { status }, // send the new status to backend
+        data: { status }, // send the new status to backend
       }),
     }),
   }),

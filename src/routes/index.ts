@@ -17,7 +17,7 @@ import { RideRequest } from "@/pages/Rider/RiderRequest";
 import Riders from "@/pages/Admin/Riders";
 import { adminSidebarItems } from "./adminSIdebarItems";
 import { driverSidebarItems } from "./DriverSidebar";
-import { Profile } from "@/pages/Driver/Profile";
+import { DriverProfile } from "@/pages/Driver/DriverProfile";
 
 export const router = createBrowserRouter([
   {
@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
     path: "/driver",
     Component: withAuth(DashBoardLayout, role.DRIVER as TRole),
     children: [
-      { index: true, Component: Profile }, // 👈 default dashboard
+      { index: true, Component: DriverProfile }, // 👈 default dashboard
       ...generateRoutes(driverSidebarItems),
     ],
   },
