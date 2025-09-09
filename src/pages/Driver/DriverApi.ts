@@ -23,10 +23,30 @@ export const driverApi = baseApi.injectEndpoints({
       }),
     }),
     driverStatus: builder.mutation({
-      query: (status) => ({
+      query: ({ _id, availability }) => ({
         url: "driver/availability",
         method: "PATCH",
-        data: { status }, // send the new status to backend
+        data: { _id, availability }, // send the new status to backend
+      }),
+    }),
+    driverUpdate: builder.mutation({
+      query: ({ _id, profile }) => ({
+        url: `/driver/rides/${_id}/status`,
+        method: "PATCH",
+        data: { _id, profile }, // send the new status to backend
+      }),
+    }),
+    getDriverStatus: builder.mutation({
+      query: ({ _id, newStatus }) => ({
+        url: `/driver/rides/${_id}/status`,
+        method: "PATCH",
+        data: { _id, newStatus },
+      }),
+    }),
+    driverEarning: builder.query({
+      query: () => ({
+        url: "/driver/earnings",
+        method: "GET",
       }),
     }),
   }),
@@ -36,4 +56,7 @@ export const {
   useDriverCreateMutation,
   useDriverStatusMutation,
   useDriverActionMutation,
+  useGetDriverStatusMutation,
+  useDriverEarningQuery,
+  useDriverUpdateMutation,
 } = driverApi;

@@ -1,7 +1,8 @@
 import ActiveRiders from "@/pages/Driver/ActiveRides";
 import { DriverProfile } from "@/pages/Driver/DriverProfile";
 import Earnings from "@/pages/Driver/Earnings";
-import IncomingRider from "@/pages/Driver/IncomingRider";
+import { IncomingRider } from "@/pages/Driver/IncomingRider";
+
 import type { ISidebarItem } from "@/types";
 import { SquareTerminal } from "lucide-react";
 
