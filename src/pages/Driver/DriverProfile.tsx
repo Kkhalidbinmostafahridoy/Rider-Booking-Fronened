@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -15,7 +16,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import { useDriverActionMutation, useDriverCreateMutation } from "./DriverApi";
+import {
+  useDriverActionMutation,
+  useDriverCreateMutation,
+  useDriverStatusMutation,
+} from "./DriverApi";
 import { Badge } from "@/components/ui/badge";
 import type { RideRequestForm } from "../Rider/RiderRequest";
 
@@ -27,6 +32,7 @@ const driverProfileSchema = z.object({
   password: z.string().min(6),
   address: z.string().min(3),
   licenseNumber: z.string().min(3),
+  availability: z.string(),
   vehicleInfo: z.object({
     make: z.string().min(2),
     model: z.string().min(1),
@@ -45,6 +51,7 @@ export function DriverProfile({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [createDriver] = useDriverCreateMutation();
   const [driverAction] = useDriverActionMutation();
+  const [driverAvailable] = useDriverStatusMutation();
   const [storedDriver, setStoredDriver] =
     useState<DriverProfileFormValues | null>(null);
   const [createdRide, setCreatedRide] = useState<RideRequestForm | null>(null);
@@ -61,6 +68,7 @@ export function DriverProfile({
       name: storedDriver?.name || "",
       email: storedDriver?.email || "",
       phone: storedDriver?.phone || "",
+      availability: "",
       password: "",
       address: storedDriver?.address || "",
       licenseNumber: storedDriver?.licenseNumber || "",
@@ -86,6 +94,8 @@ export function DriverProfile({
         ...payload,
         _id: result.data._id,
         status: result?.data?.status || "pending",
+        // Ensure availability from server is used
+        availability: result?.data?.availability || "offline",
       };
 
       setStoredDriver(driverData);
@@ -119,22 +129,46 @@ export function DriverProfile({
       );
 
       // Update local ride state
-      setCreatedRide({
+      const updatedRide = {
         ...createdRide,
         status: action === "accept" ? "accepted" : "rejected",
-      });
-
-      localStorage.setItem(
-        "createdRide",
-        JSON.stringify({
-          ...createdRide,
-          status: action === "accept" ? "accepted" : "rejected",
-        })
-      );
+      };
+      setCreatedRide(updatedRide);
+      localStorage.setItem("createdRide", JSON.stringify(updatedRide));
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to update ride status");
     }
   };
+  const handleAvailabilityToggle = async () => {
+    if (!storedDriver?._id) {
+      toast.error("Driver profile not found.");
+      return;
+    }
+
+    const newStatus =
+      storedDriver.availability === "online" ? "offline" : "online";
+
+    try {
+      const result = await driverAvailable({
+        _id: storedDriver._id,
+        availability: newStatus,
+      }).unwrap();
+
+      const updatedDriver = result.data;
+
+      setStoredDriver(updatedDriver);
+      localStorage.setItem("driverProfile", JSON.stringify(updatedDriver));
+
+      toast.success(
+        `Driver is now ${updatedDriver.availability.toUpperCase()}`
+      );
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to update availability");
+    }
+  };
+
+  // ======== END: CORRECTED FUNCTION ========
+
   useEffect(() => {
     const ride = localStorage.getItem("createdRide");
     if (ride) setCreatedRide(JSON.parse(ride));
@@ -351,22 +385,31 @@ export function DriverProfile({
                   {storedDriver.status || "pending"}
                 </Badge>
               </p>
+              <p>
+                <strong>Availability:</strong>{" "}
+                <Badge
+                  variant={
+                    storedDriver?.availability === "online"
+                      ? "success"
+                      : "destructive"
+                  }
+                >
+                  {storedDriver?.availability || "offline"}
+                </Badge>
+              </p>
 
-              {/* Accept / Reject Buttons */}
-              {/* <div className="flex gap-4 mt-4">
-                <Button
-                  onClick={() => handleStatusUpdate("accept")}
-                  className="bg-green-500 hover:bg-green-600"
-                >
-                  Accept
-                </Button>
-                <Button
-                  onClick={() => handleStatusUpdate("reject")}
-                  className="bg-red-500 hover:bg-red-600"
-                >
-                  Reject
-                </Button>
-              </div> */}
+              {/* <Button
+                onClick={handleAvailabilityToggle}
+                className={
+                  storedDriver?.availability === "online"
+                    ? "bg-red-500 hover:bg-red-600"
+                    : "bg-green-500 hover:bg-green-600"
+                }
+              >
+                {storedDriver?.availability === "online"
+                  ? "Go Offline"
+                  : "Go Online"}
+              </Button> */}
             </CardContent>
           </Card>
         )}
