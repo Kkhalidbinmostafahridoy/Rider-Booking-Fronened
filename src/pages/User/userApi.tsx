@@ -2,47 +2,64 @@
 
 // export const userApi = baseApi.injectEndpoints({
 //   endpoints: (builder) => ({
-//     getUser: builder.query({
-//       query: (_id: string) => `/user/${_id}`, // GET request
-//       method: "GET",
+//     getUserCheck: builder.query({
+//       query: (_id: string) => {
+//         const token = localStorage.getItem("token");
+//         return {
+//           url: `/user/${_id}`,
+//           method: "GET",
+//           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+//         };
+//       },
 //     }),
-//     userBlock: builder.mutation({
-//       query: ({ _id, block }: { _id: string; block: boolean }) => ({
-//         url: `/user/${_id}`,
-//         method: "PATCH",
-//         data: { block },
-//       }),
+//     // ✅ FIX: Update the mutation to accept a generic 'body' payload
+//     userUpdate: builder.mutation({
+//       query: ({ _id, block }: { _id: string; block: boolean }) => {
+//         const token = localStorage.getItem("token");
+//         return {
+//           url: `/user/${_id}`,
+//           method: "PATCH",
+//           body: { isActive: block ? "BLOCKED" : "ACTIVE" }, // send correct field
+//           headers: token ? { Authorization: `Bearer ${token}` } : {},
+//         };
+//       },
+//       invalidatesTags: (result, error, { _id }) => [{ type: "User", id: _id }],
 //     }),
 //   }),
 // });
 
-// export const { useGetUserQuery, useUserBlockMutation } = userApi;
+// export const { useGetUserCheckQuery, useUserUpdateMutation } = userApi;
+
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 import { baseApi } from "@/redux/baseApi";
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Fetch user by ID
-    fetchUser: builder.query<{ _id: string; isActive: boolean }, string>({
-      query: (_Id) => `/user/${_Id}`, // GET /api/user/:id
+    getUserCheck: builder.query({
+      query: (id: string) => ({
+        url: `/user/${id}`,
+        method: "GET",
+      }),
     }),
 
-    // Block/unblock user
-    toggleBlockUser: builder.mutation<
-      { _id: string; isActive: boolean },
-      { _id: string; block: boolean }
-    >({
-      query: ({ _id, block }) => ({
+    // Update block/unblock user
+    userUpdate: builder.mutation({
+      query: ({ _id, isActive }: { _id: string; isActive: string }) => ({
         url: `/user/${_id}`,
-        method: "PATCH", // use PATCH to update status
-        body: { block },
+        method: "PATCH",
+        body: { isActive }, // ✅ Only send isActive
       }),
     }),
   }),
 });
 
-export const {
-  useFetchUserQuery,
-  useLazyFetchUserQuery,
-  useToggleBlockUserMutation,
-} = userApi;
+export const { useGetUserCheckQuery, useUserUpdateMutation } = userApi;
