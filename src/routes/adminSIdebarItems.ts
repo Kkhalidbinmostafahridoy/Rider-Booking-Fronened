@@ -1,11 +1,13 @@
 // import Analytics from "@/pages/Admin/Analytics";
 import Driver from "@/pages/Admin/Driver";
 import Riders from "@/pages/Admin/Riders";
+import UserCheck from "@/pages/User/UserCheck";
+
 import type { ISidebarItem } from "@/types";
 import { SquareTerminal } from "lucide-react";
-import { lazy } from "react";
+// import { lazy } from "react";
 
-const Users = lazy(() => import("@/pages/Admin/Users"));
+// const Users = lazy(() => import("@/pages/User/UserCheck"));
 
 export const adminSidebarItems: ISidebarItem[] = [
   {
@@ -15,18 +17,18 @@ export const adminSidebarItems: ISidebarItem[] = [
     isActive: true,
     items: [
       {
-        title: "Users",
-        url: "users", // relative to /admin
-        Component: Users,
+        title: "User",
+        url: "user-check", // just static, fallback id used
+        Component: UserCheck,
       },
       {
         title: "Riders",
-        url: "riders", // relative to /admin
+        url: "riders",
         Component: Riders,
       },
       {
         title: "Drivers",
-        url: "drivers", // relative to /admin
+        url: "drivers",
         Component: Driver,
       },
     ],
