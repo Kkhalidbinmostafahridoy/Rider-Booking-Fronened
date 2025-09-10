@@ -123,6 +123,7 @@ export function DriverProfile({
         _id: createdRide._id,
         action,
       }).unwrap();
+      console.log(result);
 
       toast.success(
         `Ride ${action === "accept" ? "accepted" : "rejected"} successfully!`
@@ -139,6 +140,7 @@ export function DriverProfile({
       toast.error(err?.data?.message || "Failed to update ride status");
     }
   };
+  console.log(handleStatusUpdate);
   const handleAvailabilityToggle = async () => {
     if (!storedDriver?._id) {
       toast.error("Driver profile not found.");
@@ -166,7 +168,7 @@ export function DriverProfile({
       toast.error(err?.data?.message || "Failed to update availability");
     }
   };
-
+  console.log(handleAvailabilityToggle);
   // ======== END: CORRECTED FUNCTION ========
 
   useEffect(() => {

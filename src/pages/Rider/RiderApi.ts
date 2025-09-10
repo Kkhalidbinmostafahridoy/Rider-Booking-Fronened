@@ -14,7 +14,7 @@ export const authApi = baseApi.injectEndpoints({
         url: `/rider/${_id}/cancel`, // replace :id with actual ride id
         method: "PATCH",
       }),
-      invalidatesTags: [{ type: "Ride", id: "LIST" }],
+      invalidatesTags: [{ type: "USER", id: "LIST" }],
     }),
 
     getRiderHistory: builder.query({

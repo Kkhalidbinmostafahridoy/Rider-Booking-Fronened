@@ -1,5 +1,5 @@
 import Driver from "@/pages/Admin/Driver";
-import RidersCancel from "@/pages/Admin/Riders";
+
 import type { ISidebarItem } from "@/types";
 import { SquareTerminal } from "lucide-react";
 
@@ -10,11 +10,11 @@ export const userSidebarItems: ISidebarItem[] = [
     icon: SquareTerminal,
     isActive: true,
     items: [
-      {
-        title: "Riders",
-        url: "riders", // relative to /admin
-        Component: RidersCancel,
-      },
+      // {
+      //   title: "Riders",
+      //   url: "riders", // relative to /admin
+      //   Component: RidersCancel,
+      // },
       {
         title: "Driver",
         url: "driver", // relative to /admin

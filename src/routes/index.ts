@@ -14,10 +14,11 @@ import { riderSidebarItems } from "./RiderSiderbar";
 import { userSidebarItems } from "./userSidebarItems";
 import HomePage from "@/pages/HomePage";
 import { RideRequest } from "@/pages/Rider/RiderRequest";
-import Riders from "@/pages/Admin/Riders";
+// import Riders from "@/pages/Admin/RiderOversight";
 import { adminSidebarItems } from "./adminSIdebarItems";
 import { driverSidebarItems } from "./DriverSidebar";
 import { DriverProfile } from "@/pages/Driver/DriverProfile";
+import UserCheck from "@/pages/User/UserCheck";
 
 export const router = createBrowserRouter([
   {
@@ -40,7 +41,7 @@ export const router = createBrowserRouter([
     path: "/admin",
     Component: withAuth(DashBoardLayout, role.ADMIN as TRole),
     children: [
-      { index: true, Component: Riders }, // 👈 default dashboard
+      { index: true, Component: UserCheck }, // 👈 default dashboard
       ...generateRoutes(adminSidebarItems),
     ],
   },

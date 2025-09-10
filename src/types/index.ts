@@ -53,14 +53,39 @@ export interface ISidebarItem {
   Component?: React.ComponentType<any>;
 }
 
+// export interface Ride {
+//   _id: string;
+//   pickupLocation: { address: string };
+//   destinationLocation: { address: string };
+//   fare: number;
+//   status: "Pending" | "Accepted" | "Cancelled" | "Completed";
+//   driverName?: string;
+//   createdAt: string;
+// }
+
+// types.ts
+export interface Location {
+  coordinates: [number, number];
+  address: string;
+}
+
 export interface Ride {
   _id: string;
-  pickupLocation: { address: string };
-  destinationLocation: { address: string };
+  rider?: { name: string } | string;
+  driver?: { name: string; vehicle: string } | string;
+  pickupLocation: Location;
+  destinationLocation: Location;
+  paymentMethod: "cash" | "card";
   fare: number;
-  status: "Pending" | "Accepted" | "Cancelled" | "Completed";
-  driverName?: string;
+  status: "requested" | "accepted" | "rejected" | "completed" | "cancelled";
   createdAt: string;
+}
+
+export interface GetRidesResponse {
+  rides: Ride[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export type TRole = "ADMIN" | "USER" | "RIDER" | "DRIVER";
