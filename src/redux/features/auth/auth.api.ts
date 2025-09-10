@@ -1,5 +1,4 @@
 import { baseApi } from "@/redux/baseApi";
-import type { Ride } from "@/types";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -23,7 +22,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         data: userInfo,
       }),
-      providesTags: () => ["USER"], // Tag the User data on login
+      // providesTags: () => ["USER"], // Tag the User data on login
     }),
     logout: builder.mutation({
       query: () => ({

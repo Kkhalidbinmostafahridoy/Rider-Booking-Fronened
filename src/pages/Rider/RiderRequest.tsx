@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useForm } from "react-hook-form";
+import { useForm, type Control, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ const rideRequestSchema = z.object({
   fare: z.number().min(0).optional(),
 });
 
-type RideRequestForm = z.infer<typeof rideRequestSchema> & {
+export type RideRequestForm = z.infer<typeof rideRequestSchema> & {
   _id?: string;
   status?: string;
   driver?: {
@@ -54,7 +54,7 @@ export function RideRequest() {
   const [createdRide, setCreatedRide] = useState<RideRequestForm | null>(null);
 
   const form = useForm<RideRequestForm>({
-    resolver: zodResolver(rideRequestSchema),
+    resolver: zodResolver(rideRequestSchema) as Resolver<RideRequestForm>,
     defaultValues: {
       pickupLocation: { coordinates: [90.4125, 23.8103], address: "" },
       destinationLocation: { coordinates: [90.4244, 23.7806], address: "" },
@@ -159,7 +159,9 @@ export function RideRequest() {
                   <div className="border rounded-lg p-4 shadow-sm">
                     <h3 className="font-semibold mb-3">📍 Pickup Location</h3>
                     <FormField
-                      control={form.control}
+                      control={
+                        form.control as unknown as Control<RideRequestForm>
+                      } // <- type cast
                       name="pickupLocation.address"
                       render={({ field }) => (
                         <FormItem>
@@ -176,7 +178,9 @@ export function RideRequest() {
                     />
                     <div className="grid grid-cols-2 gap-3 mt-3">
                       <FormField
-                        control={form.control}
+                        control={
+                          form.control as unknown as Control<RideRequestForm>
+                        } // <- type cast
                         name="pickupLocation.coordinates.0"
                         render={({ field }) => (
                           <FormItem>
@@ -197,7 +201,9 @@ export function RideRequest() {
                         )}
                       />
                       <FormField
-                        control={form.control}
+                        control={
+                          form.control as unknown as Control<RideRequestForm>
+                        } // <- type cast
                         name="pickupLocation.coordinates.1"
                         render={({ field }) => (
                           <FormItem>
@@ -226,7 +232,9 @@ export function RideRequest() {
                       🎯 Destination Location
                     </h3>
                     <FormField
-                      control={form.control}
+                      control={
+                        form.control as unknown as Control<RideRequestForm>
+                      } // <- type cast
                       name="destinationLocation.address"
                       render={({ field }) => (
                         <FormItem>
@@ -244,7 +252,9 @@ export function RideRequest() {
 
                     <div className="grid grid-cols-2 gap-3 mt-3">
                       <FormField
-                        control={form.control}
+                        control={
+                          form.control as unknown as Control<RideRequestForm>
+                        } // <- type cast
                         name="destinationLocation.coordinates.0"
                         render={({ field }) => (
                           <FormItem>
@@ -265,7 +275,9 @@ export function RideRequest() {
                         )}
                       />
                       <FormField
-                        control={form.control}
+                        control={
+                          form.control as unknown as Control<RideRequestForm>
+                        } // <- type cast
                         name="destinationLocation.coordinates.1"
                         render={({ field }) => (
                           <FormItem>
@@ -292,7 +304,9 @@ export function RideRequest() {
                           💳 Payment Method
                         </h3>
                         <FormField
-                          control={form.control}
+                          control={
+                            form.control as unknown as Control<RideRequestForm>
+                          } // <- type cast
                           name="paymentMethod"
                           render={({ field }) => (
                             <FormItem>

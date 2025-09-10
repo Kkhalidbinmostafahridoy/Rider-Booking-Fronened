@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGetUserCheckQuery, useUserUpdateMutation } from "./userApi";
+import { toast } from "sonner";
 
 const UserCheck = () => {
   const [userId, setUserId] = useState("");
@@ -40,7 +41,7 @@ const UserCheck = () => {
       setSuccessMsg(`User is now ${newStatus}`);
     } catch (err) {
       console.error(err);
-      alert("Failed to update user status. Make sure you are Admin.");
+      toast.success("user Update successfully");
     }
   };
 
@@ -81,7 +82,7 @@ const UserCheck = () => {
       {/* User Info */}
       {userData && (
         <div className="space-y-4">
-          <p>
+          {/* <p>
             <span className="font-medium">Name:</span> {userData.name}
           </p>
           <p>
@@ -93,12 +94,18 @@ const UserCheck = () => {
           <p>
             <span className="font-medium">Verified:</span>{" "}
             {userData.isVerified ? "Yes" : "No"}
-          </p>
+          </p> */}
           <p>
             <span className="font-medium">Status:</span> {userData.isActive}
           </p>
 
           {successMsg && <p className="text-blue-600">{successMsg}</p>}
+
+          {userData?.role === "DRIVER" && !userData?.isOnline && (
+            <p className="text-yellow-600">
+              You are currently offline. Go online to receive ride requests.
+            </p>
+          )}
 
           {/* Block / Active button */}
           <button

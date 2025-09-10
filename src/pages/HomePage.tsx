@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {
   FaUsers,
   FaMapMarkedAlt,
@@ -10,7 +11,7 @@ import {
   FaStar,
   FaRoute,
 } from "react-icons/fa";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+// import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { Link } from "react-router-dom";
 import "leaflet/dist/leaflet.css";
 import RideHilling from "@/assets/images/Ride-Hailing.jpg";
@@ -22,9 +23,13 @@ import userDashboard from "@/assets/images/userdashboard.png";
 import RiderDashboard from "@/assets/images/rider.png";
 import driverDashboard from "@/assets/images/driver.png";
 import banner from "@/assets/images/banner added.png";
+// import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+// import { C } from "node_modules/react-router/dist/development/index-react-server-client-DRhjXpk2.d.mts";
+// import { LatLngExpression } from "leaflet";
 
 function HomePage() {
   // Services
+  // const mapCenter: LatLngExpression = [23.8103, 90.4125];
   const services = [
     {
       title: "Ride-Hailing",
@@ -163,6 +168,7 @@ function HomePage() {
       lng: 90.44,
     },
   ];
+  console.log(participants);
 
   // Vehicle icons for map
   const vehicleIcons: Record<string, any> = {
@@ -171,6 +177,7 @@ function HomePage() {
     Bicycle: FaBicycle,
     Truck: FaTruck,
   };
+  console.log(vehicleIcons);
 
   return (
     <div className="font-sans bg-gradient-to-b from-gray-100 to-gray-50 text-gray-900">
@@ -231,15 +238,15 @@ function HomePage() {
 
           {/* Right Column: Live Map */}
           <div className="flex-1 h-[500px] rounded-3xl overflow-hidden shadow-xl">
-            <MapContainer
+            {/* <MapContainer
               center={[23.8103, 90.4125]}
               zoom={13}
-              scrollWheelZoom
+              scrollWheelZoom={true}
               className="h-full w-full"
             >
               <TileLayer
-                attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                {...{ attribution: "© OpenStreetMap contributors" }}
               />
               {participants.map((p, idx) => {
                 const VehicleIcon = vehicleIcons[p.vehicle] || FaMotorcycle;
@@ -254,7 +261,7 @@ function HomePage() {
                   </Marker>
                 );
               })}
-            </MapContainer>
+            </MapContainer> */}
           </div>
         </div>
       </section>

@@ -23,10 +23,16 @@ export const driverApi = baseApi.injectEndpoints({
       }),
     }),
     driverStatus: builder.mutation({
-      query: ({ _id, availability }) => ({
-        url: "driver/availability",
+      query: ({
+        _id,
+        availability,
+      }: {
+        _id: string;
+        availability: "online" | "offline";
+      }) => ({
+        url: "/driver/availability", // make sure this matches backend
         method: "PATCH",
-        data: { _id, availability }, // send the new status to backend
+        data: { _id, availability }, // send driver id and new status
       }),
     }),
     driverUpdate: builder.mutation({
